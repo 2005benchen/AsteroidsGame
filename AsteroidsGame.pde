@@ -5,8 +5,11 @@ boolean wKey, sKey, exhaust;
 boolean range = false;
 int a;
 int b;
+ArrayList <Bullet>shots=new ArrayList<Bullet>();
+
 
 public void setup() {
+  background(0);
   size(1000, 1000);
   stars = new Star[200];
   for (int i =0; i < stars.length; i++) {
@@ -33,7 +36,6 @@ public void draw() {
   bob.show();
   bob.move();
   for (int i = 0; i < belt.size(); i++) {
-
     belt.get(i).move();
     belt.get(i).show();
     belt.get(i).setDistanceA( (int)dist(belt.get(i).getX(), belt.get(i).getY(), bob.getX(), bob.getY() ) );
@@ -45,6 +47,27 @@ public void draw() {
       belt.remove(belt.get(i));
       break;
     }
+
+
+    for (int k = 0; k < shots.size(); k++) {
+      belt.get(i).setDistanceB((int)dist(belt.get(i).getX(), belt.get(i).getY(), shots.get(k).getX(), shots.get(k).getY() ) );
+      if (range == false && belt.get(i).getDistanceB() < 30) {
+        belt.remove(belt.get(i));
+        shots.remove(shots.get(k));
+        break;
+      }
+    }
+  }
+
+  for (int i = 0; i < shots.size(); i ++) {
+    shots.get(i).show();
+    shots.get(i).move();
+  }
+
+  if (belt.size() == 0) {
+    background(0);
+    textSize(100);
+    text("VICTORY", 350, 500);
   }
 
   if (wKey == true) {
@@ -67,6 +90,11 @@ public void draw() {
     bob.setX((bob.getX()+(int)bob.getXspeed()));
     bob.setY((bob.getY()+(int)bob.getYspeed()));
     bob.accelerate(0);
+  }
+
+  for (int i = 0; i<shots.size(); i++) {
+    shots.get(i).move();
+    shots.get(i).show();
   }
 }
 
@@ -91,6 +119,9 @@ public void keyPressed() {
   if (key == 's') {
     sKey = true;
   }
+  if (key=='f') {
+    shots.add(new Bullet(bob));
+  }
 }
 
 public void keyReleased() {
@@ -102,5 +133,3 @@ public void keyReleased() {
   }
   exhaust = false;
 }
-
-//testing
